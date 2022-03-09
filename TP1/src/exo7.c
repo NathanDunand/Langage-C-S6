@@ -7,9 +7,11 @@
  **/
 int main(int argc, char **argv[])
 {
-    int x = 5 & 2;
+    int x = 5 & 6;
     printf("%i\n", x);
 
-    x = 5 && 2;
+    x = 5 && 6;
     printf("%i\n", x);
+
+    return 0;
 }

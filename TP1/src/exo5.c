@@ -33,4 +33,6 @@ int main(int argc, char **argv[])
     x = ((float)10) / 3;
     printf("%.0f\n", x);
     printf("%.5f\n", x);
+
+    return 0;
 }

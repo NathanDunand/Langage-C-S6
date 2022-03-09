@@ -17,4 +17,6 @@ int main(int argc, char **argv[])
 
     float x2 = (int)5.0 % 2;
     printf("%f\n", x2);
+
+    return 0;
 }
