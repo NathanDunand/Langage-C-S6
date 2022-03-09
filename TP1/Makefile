@@ -5,7 +5,7 @@ BIN = bin
 SRC = src
 PROG = $(BIN)/$@
 OBJS = $(BIN)/$@.o
-NUMBERS = $(shell ls src/ -1 | sed 's/\.[^.]*$\//')
+NUMBERS = $(shell ls src/*.c -1 | sed 's/\.[^.]*$\//')
 
 all:
 	$(foreach var,$(NUMBERS),$(GCC) -c $(FLAGS) $(SRC)/$(var).c -o bin/$(var);)
