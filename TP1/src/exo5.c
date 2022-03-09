@@ -12,7 +12,7 @@
  * c'est pour cela que pour un même calcul on obtient des résultats différents.
  **/
 
-int main(int argc, char **argv[])
+int main(int argc, char **argv)
 {
     float x = 10 / 3;
     printf("%f\n", x);
