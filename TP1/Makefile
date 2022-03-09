@@ -11,4 +11,4 @@ all:
 	$(foreach var,$(NUMBERS),$(GCC) -c $(FLAGS) $(SRC)/$(var).c -o bin/$(var);)
 
 clean:
-	rm -f ./bin/*
+	rm -f ./$(BIN)/*
