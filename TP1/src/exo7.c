@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <float.h>
 
 /**
  * Exercice 7 : Autour du cercle
@@ -19,9 +20,21 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    float rayon = (float)strtod(argv[1], NULL);
-    float perimetre = PI * pow(rayon, 2);
-    printf("%f\n", perimetre);
+    double rayon = strtod(argv[1], NULL);
+
+    if (rayon < 0)
+    {
+        printf("Veuillez mettre un rayon positif");
+        return 1;
+    }
+
+    if (rayon > DBL_MAX || sqrt(DBL_MAX / PI) < rayon)
+    {
+        printf("Le rayon est trop grand");
+        return 1;
+    }
+    double perimetre = PI * pow(rayon, 2);
+    printf("%lf\n", perimetre);
 
     return 0;
 }
