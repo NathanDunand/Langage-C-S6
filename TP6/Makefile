@@ -1,5 +1,7 @@
-DIR = $(shell find -type d -maxdepth 1 | grep -oh ^[.,/,a-z,0-9]*)
+DIR = $(shell find -maxdepth 1 -type d | grep -oh [.][/][a-z,0-9]*$)
 
 all:
-	@echo $(DIR)
-	$(foreach var,$(DIR) cd $(var);make;)
+	$(foreach var,$(DIR), cd $(var); make; cd ..;)
+
+clean:
+	$(foreach var,$(DIR), cd $(var); make clean; cd ..;)
