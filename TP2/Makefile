@@ -1,5 +1,5 @@
 GCC = gcc
-FLAGS = -Wall -ansi
+FLAGS = -Wall -ansi -std=c99
 
 BIN = bin
 SRC = src
