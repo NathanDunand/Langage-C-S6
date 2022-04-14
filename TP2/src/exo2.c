@@ -14,13 +14,15 @@
  */
 void square(int line)
 {
-    for (int i = 0; i < line; i++)
+    int i = 0;
+    while (i < line)
     {
         for (int j = 0; j < line; j++)
         {
             printf("*");
         }
         printf("\n");
+        i++;
     }
     printf("\n");
 }
@@ -150,21 +152,58 @@ void diamond(int line)
  * Ce programme affiche des etoiles en fonction de l'entrée
  **/
 
-int intFromSTDIN(to_display)
+int intFromSTDIN(char *to_display)
 {
-    printf(to_display);
+    printf("%s", to_display);
+    char *line = malloc(100), *linep = line;
+    size_t lenmax = 100, len = lenmax;
+    int c;
+
+    if (line == NULL)
+    {
+        return 0;
+    }
+
+    for (;;)
+    {
+        c = fgetc(stdin);
+        if (c == EOF)
+            break;
+
+        if (--len == 0)
+        {
+            len = lenmax;
+            char *linen = realloc(linep, lenmax *= 2);
+
+            if (linen == NULL)
+            {
+                free(linep);
+                return 0;
+            }
+            line = linen + (line - linep);
+            linep = linen;
+        }
+
+        if ((*line++ = c) == '\n')
+            break;
+    }
+    *line = '\0';
+
+    int given = atoi(linep);
+    return given;
 }
 
 int main(int argc, char **argv)
 {
-    int line = intFromSTDIN("Entrez le nombre de lignes");
-    int menu = intFromSTDIN("Que voulez vous afficher (1-5)");
+    int line = intFromSTDIN("Entrez le nombre de lignes : ");
 
-    if (line < 0)
+    if (line < 1 || line > 20)
     {
-        printf("ERREUR : Nombre de lignes : Nombre incorrect");
+        printf("ERREUR : Nombre de lignes : Nombre incorrect (0<N<20)\n");
         return 1;
     }
+
+    int menu = intFromSTDIN("Que voulez vous afficher (1-5) ? ");
 
     if (menu <= 0 && menu > 5)
     {
