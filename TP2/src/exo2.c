@@ -4,13 +4,13 @@
 #include <float.h>
 
 /**
- * Affiche un carré de line * line
+ * Exercice 2 : Etoile
  *
- * ex : pour line = 4
- * ****
- * ****
- * ****
- * ****
+ * Ce programme affiche des etoiles en fonction de l'entrée
+ **/
+
+/**
+ * Affiche un carré de line * line
  */
 void square(int line)
 {
@@ -27,6 +27,10 @@ void square(int line)
     printf("\n");
 }
 
+/**
+ * Affiche une flèche pointant vers la droite d'une hauteur
+ * de line et largeur de line/2 (+1 si impair)
+ */
 void right_arrow(int line)
 {
     for (int i = 0; i < line; i++)
@@ -56,6 +60,10 @@ void right_arrow(int line)
     printf("\n");
 }
 
+/**
+ * Affiche une flèche pointant vers la gauche d'une hauteur
+ * de line et largeur de line/2 (+1 si impair)
+ */
 void left_arrow(int line)
 {
     for (int i = 0; i < line; i++)
@@ -93,6 +101,10 @@ void left_arrow(int line)
     printf("\n");
 }
 
+/**
+ * Affiche une pyramide d'une hauteur
+ * de line et largeur de line/2 (+1 si impair)
+ */
 void pyramid(int line, int newline)
 {
     for (int i = 0; i < line; i++)
@@ -120,6 +132,9 @@ void pyramid(int line, int newline)
     }
 }
 
+/**
+ * Affiche un losange d'une hauteur de line
+ */
 void diamond(int line)
 {
     int x = 0;
@@ -147,11 +162,8 @@ void diamond(int line)
 }
 
 /**
- * Exercice 2 : Etoile
- *
- * Ce programme affiche des etoiles en fonction de l'entrée
- **/
-
+ * Permet de récupérer un nombre de manière sécurisé
+ */
 int intFromSTDIN(char *to_display)
 {
     printf("%s", to_display);
