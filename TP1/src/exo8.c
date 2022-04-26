@@ -11,8 +11,9 @@
  **/
 
 int main(int argc, char **argv)
-{
-    char op;
+{   
+    //char op;
+    char* op = malloc(sizeof(char));
     printf("Entrez l'opération (/,*,-,+): ");
     scanf("%c", &op);
 
