@@ -126,7 +126,7 @@ void executerChoix(int choice)
         break;
     }
     if (good == 0)
-        print("Veuillez choisir un nombre entre 0 et 6 inclus");
+        printf("Veuillez choisir un nombre entre 0 et 6 inclus");
     else
         printf("Le résultat est %f", res);
 }

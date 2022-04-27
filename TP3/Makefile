@@ -9,7 +9,8 @@ MKDIR = mkdir -p
 
 PROG = $(BIN)/$@
 OBJS = $(BIN)/$@.o
-NUMBERS = $(shell find src/*.c | grep -oh ^[a-z,/,0-9,\-]* | cut -d "/" -f2-)
+NUMBERS = $(shell find src/*/*.c | grep -oh ^[a-z,/,0-9,\-]* | cut -d "/" -f2-)
+FOLDERS = $(shell find src/*/*.c | grep -oh ^[a-z,/,0-9,\-]* | rev | cut -d "/" -f2- | rev | cut -d "/" -f2-)
 
 all: link
 	@echo executing ...
@@ -19,9 +20,13 @@ link: compile
 	@echo linking ...
 	$(foreach var, $(shell find bin/*/*.o | grep -oh ^[a-z,/,0-9,\-]* | rev | cut -d "/" -f2- | rev | cut -d "/" -f2-), cd $(BIN)/$(var) | gcc $(BIN)/$(var)/*.o -o $(BIN)/$(var)/main;)
 
-compile: clean
+compile: creating
 	@echo compiling ...
 	$(foreach var,$(NUMBERS), $(GCC) $(FLAGS) $(SRC)/$(var).c -o $(BIN)/$(var).o -lm;)
+
+creating: clean
+	@echo creating directories ...
+	$(foreach var,$(FOLDERS), $(MKDIR) $(BIN)/$(var);)
 
 clean:
 	@echo cleaning ...
