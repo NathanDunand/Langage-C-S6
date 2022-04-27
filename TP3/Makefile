@@ -9,8 +9,7 @@ MKDIR = mkdir -p
 
 PROG = $(BIN)/$@
 OBJS = $(BIN)/$@.o
-NUMBERS = $(shell find src/*/*.c | grep -oh ^[a-z,/,0-9,\-]* | cut -d "/" -f2-)
-FOLDERS = $(shell find src/*/*.c | grep -oh ^[a-z,/,0-9,\-]* | rev | cut -d "/" -f2- | rev | cut -d "/" -f2-)
+NUMBERS = $(shell find src/*.c | grep -oh ^[a-z,/,0-9,\-]* | cut -d "/" -f2-)
 
 all: link
 	@echo executing ...
