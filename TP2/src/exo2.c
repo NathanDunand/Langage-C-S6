@@ -33,7 +33,7 @@ void square(int line)
  */
 void right_arrow(int line)
 {
-    for (int i = 0; i < line; i++)
+    /*for (int i = 0; i < line; i++)
     {
         int x = 0;
         if (line % 2 == 1)
@@ -57,7 +57,25 @@ void right_arrow(int line)
         }
         printf("\n");
     }
-    printf("\n");
+    printf("\n");*/
+    /*line*2-1 -> nombre de ligne*/
+    for(int i = 0; i < line*2-1; i++){
+        if(i+1 < line){
+            for(int j = 0; j <= i; j++){
+                printf("*");
+            }
+        } else if(i+1 > line){
+            for(int j = (line*2)-(i+1); j > 0; j--){
+                printf("*");
+            }
+        } else {
+            /*hauteur de la pyramide*/
+            for(int j = 0; j <= i; j++){
+                printf("*");
+            }
+        }
+        printf("\n");
+    }
 }
 
 /**
