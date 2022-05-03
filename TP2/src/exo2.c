@@ -84,7 +84,7 @@ void right_arrow(int line)
  */
 void left_arrow(int line)
 {
-    for (int i = 0; i < line; i++)
+    /*for (int i = 0; i < line; i++)
     {
         int x = 0;
         if (line % 2 == 1)
@@ -116,7 +116,35 @@ void left_arrow(int line)
         }
         printf("\n");
     }
-    printf("\n");
+    printf("\n");*/
+
+    /*nombre d'espaces et d'étoiles à afficher au début*/
+    int white = line-1, stars = 1;
+    for(int i = 0; i < line*2-1; i++){
+        if(i+1 < line){
+            int j;
+            for(j = 1; j < line-i; j++){
+                printf(" ");
+            }
+            for(int k=0; k <= line-j; k++){
+                printf("*");
+            }
+        } else if(i+1 > line){
+            int j;
+            for(j = 0; j <= i-line; j++){
+                printf(" ");
+            }
+            for(int k=1; k <= line-j; k++){
+                printf("*");
+            }
+        } else {
+            /*hauteur de la pyramide*/
+            for(int j = 0; j <= i; j++){
+                printf("*");
+            }
+        }
+        printf("\n");
+    }
 }
 
 /**
