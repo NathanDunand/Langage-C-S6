@@ -1,15 +1,12 @@
-/*
- * TP 5 : Pointeurs
- *
- * : lecture de l'adresse des éléments d'un tableau
- */
 #include <stdio.h>
-#define N 5
-void main()
-{
-    int i;
-    int t[N] = {10, 20, 30, 40, 50};
 
-    for (i = 0; i < N; i++)
-        printf("t[%d] = %d ; &t[%d] = %u\n", i, t[i], i, &t[i]);
+void main(void)
+{
+  int *px;
+  px = (int *)malloc(sizeof(int));
+
+  *px = 1;
+  printf("Adresse de px : %X\n", &px);
+  printf("Adresse pointee par le pointeur px = %X\n", px);
+  printf("Valeur memorisee a l'adresse pointee par le pointeur px = %d\n\n", *px);
 }
