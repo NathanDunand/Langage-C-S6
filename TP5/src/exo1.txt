@@ -1,0 +1,26 @@
+1.  Qu'oserve-t-on lors de l'exécution de ce programme ?
+
+Nous pouvons observer que les nombres sont tous écartés de 4 octets. En exécutant le
+programme plusieurs fois, nous pouvons remarquer que la zone mémoire est différente
+à chaque fois mais que l'écart entre les nombres reste toujours identiques.
+
+2.  Illustrez sous forme d’un schéma (plan mémoire) similaire à celui de la Figure 1
+    la représentation en mémoire du tableau « t ».
+
+int t[N] = {10, 20, 30, 40, 50};
+
+Adresses              Mémoire     
+                 ----------------
+ 0  i       ---> |      10      |
+ 1  i+4     ---> |      20      |
+ 2  i+8     ---> |      30      |
+ 3  i+12    ---> |      40      |
+ 4  i+16    ---> |      50      |
+                 ----------------
+
+3.  Compilez et exécutez plusieurs fois ce programme en remplaçant dans la déclaration
+    du tableau « t » le type « int » par « short int », « float », « double ». Que peut-
+    on en déduire sur le format de stockage des types de données mentionnés ?
+
+4.  Écrire le programme suivant et expliquer à l’aide d’un schéma son fonctionnement et
+    sa représentation mémoire.
