@@ -1,6 +1,7 @@
 #include "degre.h"
 
-int main(int argc, char **argv)
+/*DEPRECATED*/
+/*int main(int argc, char **argv)
 {
     // Celsius -> Fahrenheit
     if (cel2fah(0.0) == (float)32)
@@ -67,4 +68,4 @@ int main(int argc, char **argv)
         printf("OK\n");
     else
         printf("ERROR\n");
-}
+}*/
