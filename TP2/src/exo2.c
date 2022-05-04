@@ -33,7 +33,7 @@ void square(int line)
  */
 void right_arrow(int line)
 {
-    for (int i = 0; i < line; i++)
+    /*for (int i = 0; i < line; i++)
     {
         int x = 0;
         if (line % 2 == 1)
@@ -57,7 +57,25 @@ void right_arrow(int line)
         }
         printf("\n");
     }
-    printf("\n");
+    printf("\n");*/
+    /*line*2-1 -> nombre de ligne*/
+    for(int i = 0; i < line*2-1; i++){
+        if(i+1 < line){
+            for(int j = 0; j <= i; j++){
+                printf("*");
+            }
+        } else if(i+1 > line){
+            for(int j = (line*2)-(i+1); j > 0; j--){
+                printf("*");
+            }
+        } else {
+            /*hauteur de la pyramide*/
+            for(int j = 0; j <= i; j++){
+                printf("*");
+            }
+        }
+        printf("\n");
+    }
 }
 
 /**
@@ -66,7 +84,7 @@ void right_arrow(int line)
  */
 void left_arrow(int line)
 {
-    for (int i = 0; i < line; i++)
+    /*for (int i = 0; i < line; i++)
     {
         int x = 0;
         if (line % 2 == 1)
@@ -98,7 +116,34 @@ void left_arrow(int line)
         }
         printf("\n");
     }
-    printf("\n");
+    printf("\n");*/
+
+    /*nombre d'espaces et d'étoiles à afficher au début*/
+    for(int i = 0; i < line*2-1; i++){
+        if(i+1 < line){
+            int j;
+            for(j = 1; j < line-i; j++){
+                printf(" ");
+            }
+            for(int k=0; k <= line-j; k++){
+                printf("*");
+            }
+        } else if(i+1 > line){
+            int j;
+            for(j = 0; j <= i-line; j++){
+                printf(" ");
+            }
+            for(int k=1; k <= line-j; k++){
+                printf("*");
+            }
+        } else {
+            /*hauteur de la pyramide*/
+            for(int j = 0; j <= i; j++){
+                printf("*");
+            }
+        }
+        printf("\n");
+    }
 }
 
 /**
@@ -126,10 +171,10 @@ void pyramid(int line, int newline)
 
         printf("\n");
     }
-    if (newline == 1)
+    /*if (newline == 1)
     {
         printf("\n");
-    }
+    }*/
 }
 
 /**
@@ -137,28 +182,23 @@ void pyramid(int line, int newline)
  */
 void diamond(int line)
 {
-    int x = 0;
-    if (line % 2 == 1)
-    {
-        x = 1;
-    }
+    pyramid(line, 1);
+    /*le bas de la figure*/
 
-    pyramid((int)(line / 2 + x), 0);
-    int new_length = line - (int)(line / 2 + x);
-
-    for (int i = 0; i < new_length; i++)
-    {
-        for (int j = 0; j < new_length + i - 1; j++)
-        {
+    /*nombre d'étoiles sur la ligne du milieux, on enlève deux pour celle du dessous*/
+    int middle_line = line*2-1, count = (line%2 == 0) ? 1:0;/*count pour le nombre d'espace en bas de la pyramide*/
+    /*affectation à l'initialisation   mise à jour de la var*/
+    for(middle_line-=2; middle_line > 0; middle_line-=2){
+        /*afficher le bon nombre d'espace avant l'étoile*/
+        for(int j=0; j <= count; j++){
             printf(" ");
         }
-        for (int j = 0; j < 2 * (new_length - i) - 1; j++)
-        {
+        count ++;
+        for(int i = 0; i < middle_line; i++){
             printf("*");
         }
         printf("\n");
     }
-    printf("\n");
 }
 
 /**
