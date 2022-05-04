@@ -1,0 +1,242 @@
+#   Par soucis de simplicité, des numéros de lignes ont été ajoutées
+    pour permettre d'expliquer les étapes.
+
+
+1.  Expliquer, à l’aide de schémas et en détaillant les étapes de
+    l’exécution, pourquoi le programme ci-dessus ne fonctionne pas.
+
+Le programme donnée ne fonctionne pas car en langage C, lorsque qu'une
+variable (qui n'est pas pointeur) est passé en paramètre, elle est copiée.
+Autrement dit, la variable qui est utilisée dans la fonction n'est pas la
+même que celle qui a été passée en paramètre. Cette nouvelle variable (qu'
+on pourait appeler prime : ' ) est temporaire et n'existe que dans la
+définition de la fonction.
+
+
+# Ligne 1
+
+        x
+	 _______
+	|   ?	|
+	|_______|
+
+
+        y
+	 _______
+	|   ?	|
+	|_______|
+
+
+# Ligne 2 et 3
+
+        x
+	 _______
+	|  12	|
+	|_______|
+
+
+        y
+	 _______
+	|  34 	|
+	|_______|
+
+
+# Ligne 4.1
+
+        x               a
+	 _______         _______
+	|  12	|       |  12   |
+	|_______|       |_______|
+
+
+        y               b
+	 _______         _______
+	|  34	|       |  34   |
+	|_______|       |_______|
+
+
+       tmp 
+	 _______
+	|   ?	|
+	|_______|
+
+
+# Ligne 4.2
+
+        x               a
+	 _______         _______
+	|  12	|       |  12   |
+	|_______|       |_______|
+
+
+        y               b
+	 _______         _______
+	|  34	|       |  34   |
+	|_______|       |_______|
+
+
+       tmp 
+	 _______
+	|  12	|
+	|_______|
+
+
+# Ligne 4.3
+
+        x               a
+	 _______         _______
+	|  12	|       |  34   |
+	|_______|       |_______|
+
+
+        y               b
+	 _______         _______
+	|  34	|       |  34   |
+	|_______|       |_______|
+
+
+       tmp 
+	 _______
+	|  12	|
+	|_______|
+
+
+# Ligne 4.4
+
+        x               a
+	 _______         _______
+	|  12	|       |  34   |
+	|_______|       |_______|
+
+
+        y               b
+	 _______         _______
+	|  34	|       |  12   |
+	|_______|       |_______|
+
+
+       tmp 
+	 _______
+	|  12	|
+	|_______|
+
+3.  Expliquer, à l’aide de schémas et en détaillant les étapes de
+    l’exécution, pourquoi le programme corrigé fonctionne.
+
+Le programme fonctionne car cette fois-ci, nous utilisons
+directement les pointeurs et cela permet de modifier les variables.
+
+# Ligne 1
+
+        x
+	 _______
+	|   ?	|
+	|_______|
+
+
+        y
+	 _______
+	|   ?	|
+	|_______|
+
+
+# Ligne 2 et 3
+
+        x
+	 _______
+	|  12	|
+	|_______|
+
+
+        y
+	 _______
+	|  34 	|
+	|_______|
+
+
+# Ligne 4.1
+
+	  pa
+	 ___	    x
+	|   |	 _______
+	| •---->|  12	|
+	|___|	|_______|
+
+
+	  pb
+	 ___	    y
+	|   |	 _______
+	| •---->|  34	|
+	|___|	|_______|
+
+
+       tmp 
+	 _______
+	|   ?	|
+	|_______|
+
+
+# Ligne 4.2
+
+	  pa
+	 ___	    x
+	|   |	 _______
+	| •---->|  12	|
+	|___|	|_______|
+
+
+	  pb
+	 ___	    y
+	|   |	 _______
+	| •---->|  34	|
+	|___|	|_______|
+
+
+       tmp 
+	 _______
+	|   12	|
+	|_______|
+
+
+# Ligne 4.3
+
+	  pa
+	 ___	    x
+	|   |	 _______
+	| •---->|  34	|
+	|___|	|_______|
+
+
+	  pb
+	 ___	    y
+	|   |	 _______
+	| •---->|  34	|
+	|___|	|_______|
+
+
+       tmp 
+	 _______
+	|   12	|
+	|_______|
+
+
+# Ligne 4.4
+
+	  pa
+	 ___	    x
+	|   |	 _______
+	| •---->|  34	|
+	|___|	|_______|
+
+
+	  pb
+	 ___	    y
+	|   |	 _______
+	| •---->|  12	|
+	|___|	|_______|
+
+
+       tmp 
+	 _______
+	|   12	|
+	|_______|

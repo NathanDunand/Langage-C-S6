@@ -1,0 +1,3 @@
+Dans le premier III), nous changions directement les valeurs,
+ici dans cette procédure nous allons changer les pointeurs entre
+eux.
