@@ -1,0 +1,46 @@
+Le programme crée une structure "maillon", et l'instancie
+une première fois. Puis met la valeur de x à 1. Ensuite
+on crée un deuxième maillon, qu'on fait pointer par le
+pointeur du premier maillon. On vient de créer une liste
+chainé d'une longueur de 2.
+
+# Ligne 1
+
+		lc
+	 _______
+	|  x=? 	|
+	|       |    /
+	|suiv•------/
+	|_______|  /
+
+# Ligne 2
+
+		lc
+	 _______
+	|  x=1 	|
+	|       |    /
+	|suiv•------/
+	|_______|  /
+
+# Ligne 3
+
+		lc
+	 _______
+	|  x=1	|	 lc.suiv
+	|       |    _______
+	|suiv•----->|  x=?	|
+	|_______|  	|		|	 /
+				|suiv•------/
+				|_______|  / 
+  
+
+# Ligne 4
+
+		lc
+	 _______
+	|  x=1	|	 lc.suiv
+	|       |    _______
+	|suiv•----->|  x=2	|
+	|_______|  	|		|	 /
+				|suiv•------/
+				|_______|  /
