@@ -247,12 +247,14 @@ int intFromSTDIN(char *to_display)
 
 int main(int argc, char **argv)
 {
+    int good = 1;
     int line = intFromSTDIN("Entrez le nombre de lignes : ");
-
-    if (line < 1 || line > 20)
-    {
-        printf("ERREUR : Nombre de lignes : Nombre incorrect (0<N<20)\n");
-        return 1;
+    while(good == 1){
+        if (line < 1 || line > 20)
+        {
+            printf("ERREUR : Nombre de lignes : Nombre incorrect (0<N<20)\n");
+            line = intFromSTDIN("Entrez le nombre de lignes : ");
+        } else { good = 0; }
     }
 
     int menu = intFromSTDIN("Que voulez vous afficher (1-5) ? ");
