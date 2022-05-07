@@ -159,52 +159,79 @@ void create_personne()
     CURRENT_INDEX++;
 }
 
+void delete_people()
+{
+    int index = intFromSTDIN("Selectionnez l'index de la personne à supprimer : ");
+    if (index < 0 || index >= CURRENT_INDEX)
+    {
+        printf("Il n'y a rien à supprimer\n");
+    }
+    for (int i = index; i < CURRENT_INDEX - 1; i++)
+    {
+        DATABASE[i] = DATABASE[i + 1];
+    }
+    CURRENT_INDEX--;
+}
+
+void modify_people()
+{
+    int index = intFromSTDIN("Selectionnez l'index de la personne à modifier : ");
+    if (index < 0 || index >= CURRENT_INDEX)
+    {
+        printf("Index incorrect\n");
+        return;
+    }
+
+    char *name = charFromSTDIN("Entrer le nouveau nom : ");
+    char *surname = charFromSTDIN("Entrez le nouveau prénom : ");
+
+    int day = intFromSTDIN("Entrer le nouveau jour de naissance : ");
+    if (day < 1 || day > 31)
+    {
+        printf("Nombre incorrect.\n");
+        return;
+    }
+
+    int month = intFromSTDIN("Entrer le nouveau numéro de mois de naissance : ");
+    if (month < 1 || month > 12)
+    {
+        printf("Nombre incorrect.\n");
+        return;
+    }
+
+    int year = intFromSTDIN("Entrer la nouvelle année de naissance : ");
+    if (year < 0 || year > 2022)
+    {
+        printf("Nombre incorrect.\n");
+        return;
+    }
+
+    DATABASE[index].name = name;
+    DATABASE[index].surname = surname;
+    DATABASE[index].date_of_birth.day = day;
+    DATABASE[index].date_of_birth.month = month;
+    DATABASE[index].date_of_birth.year = year;
+}
+
 void display_people()
 {
     for (int i = 0; i < CURRENT_INDEX; i++)
     {
+        printf("###\n** INDEX ** : %d\n", i);
         printf("Nom : %s\nPrénom : %s\nDate Naissance : %d/%d/%d\n", DATABASE[i].name, DATABASE[i].surname, DATABASE[i].date_of_birth.day, DATABASE[i].date_of_birth.month, DATABASE[i].date_of_birth.year);
-        printf("###\n");
+        printf("###\n\n");
     }
 }
 
-void sort_by_date() // error de bufferoverflow
+void sort_by_date()
 {
     for (int i = 0; i < CURRENT_INDEX - 1; i++)
     {
         for (int j = i + 1; j < CURRENT_INDEX; j++)
         {
-            char i_day[3];
-            char i_month[3];
-            char i_year[5];
-            char i_concat[3 + 3 + 5];
-            int i_cmp;
 
-            sprintf(i_day, "%d", DATABASE[i].date_of_birth.day);
-            sprintf(i_month, "%d", DATABASE[i].date_of_birth.month);
-            sprintf(i_year, "%d", DATABASE[i].date_of_birth.year);
-
-            strcat(i_concat, i_day);
-            strcat(i_concat, i_month);
-            strcat(i_concat, i_year);
-
-            i_cmp = atoi(i_concat);
-
-            char j_day[3];
-            char j_month[3];
-            char j_year[5];
-            char j_concat[3 + 3 + 5];
-            int j_cmp;
-
-            sprintf(j_day, "%d", DATABASE[j].date_of_birth.day);
-            sprintf(j_month, "%d", DATABASE[j].date_of_birth.month);
-            sprintf(j_year, "%d", DATABASE[j].date_of_birth.year);
-
-            strcat(j_concat, j_day);
-            strcat(j_concat, j_month);
-            strcat(j_concat, j_year);
-
-            j_cmp = atoi(j_concat);
+            unsigned int i_cmp = (DATABASE[i].date_of_birth.year * 1000) + (DATABASE[i].date_of_birth.month * 10) + DATABASE[i].date_of_birth.day;
+            unsigned int j_cmp = (DATABASE[j].date_of_birth.year * 1000) + (DATABASE[j].date_of_birth.month * 10) + DATABASE[j].date_of_birth.day;
 
             if (i_cmp > j_cmp)
             {
@@ -218,11 +245,33 @@ void sort_by_date() // error de bufferoverflow
 
 int main()
 {
-    create_personne();
-    create_personne();
-    create_personne();
-    sort_by_date();
-    display_people();
-
+    int quit = 0;
+    while (quit != 1)
+    {
+        int choice = intFromSTDIN("\nChoix :\n0. Quitter\n1. Créer une fiche personne\n2. Afficher toutes les fiches personnes\n3. Trier les fiches en fonction de la date de naissance\n4. Selection d'une fiche pour modification\n5. Supprimer une fiche personne\n");
+        switch (choice)
+        {
+        case 0:
+            quit = 1;
+            break;
+        case 1:
+            create_personne();
+            break;
+        case 2:
+            display_people();
+            break;
+        case 3:
+            sort_by_date();
+            break;
+        case 4:
+            modify_people();
+            break;
+        case 5:
+            delete_people();
+            break;
+        default:
+            exit(1);
+        }
+    }
     return 0;
 }
