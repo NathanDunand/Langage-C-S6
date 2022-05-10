@@ -29,9 +29,56 @@ struct Personne{
     struct Node_Personne* personne_suivante;
 } Node_Personne;*/
 
+struct Personne * get_personne(struct Personne * head, int num_badge){
+    if(num_badge == 0){
+        printf("Ce numéro de badge n'existe pas.\n");
+        return NULL;
+    }
+    struct Personne * personne = head;
+    while(personne != NULL){
+        if(personne->num_badge == num_badge){
+            return personne;
+        }
+        personne = personne->suivante;
+    }
+    printf("Ce numéro de badge n'existe pas.\n");
+    return NULL;
+}
+
+/*DD/MM/YYYY*/
+char* get_current_date(){
+    /*TODO : bug ici*/
+    char date[11];
+    struct tm now;
+    now.tm_mon=1;
+    now.tm_year=1;
+    now.tm_hour=1;
+    asctime(&now);
+    printf("month : %i\n", now.tm_mon);
+    return date;
+}
+
 /*affiche une seule personne*/
 void print_personne(struct Personne * p){
     printf("\tnom : %s\n\tprénom : %s\n\tnuméro badge : %i\n\tcode secret : %i\n\tdernier passage le : %s à %ih\n", p->nom, p->prenom, p->num_badge, p->code_secret, p->last_date_access, p->last_hour_access);
+}
+
+void get_access(struct Personne * head, int num_badge, int code_secret){
+    struct Personne * p = get_personne(head, num_badge);
+    if(p == NULL){
+        return;
+    } else if(p->code_secret == code_secret){
+        printf("Accès autorisé.\n");
+        print_personne(p);
+        /*modification de la date et l'heure de la visite*/
+        memcpy(p->last_date_access, get_current_date(), strlen(get_current_date())+1);
+        p->last_hour_access = get_current_hour();
+        return;
+    } else {
+        /*code incorrect*/
+        printf("Accès refusé.\n");
+        return;
+    }
 }
 
 /*parcours de la liste en sens inverse : pour revenir au début*/
@@ -61,7 +108,18 @@ int is_head(struct Personne * node){
     return is_head;
 }
 
+void modifier_code_secret_personne(struct Personne * head, int numero_badge, int nouveau_code){
+    if(get_personne(head, numero_badge) == NULL){
+        return;
+    }
+    get_personne(head, numero_badge)->code_secret = nouveau_code;
+}
+
 void supprimer_personne(struct Personne * head, int num_badge){
+    if(num_badge == 0){/*si on tente de supprimer le noeud originel*/
+        printf("Le numéro de badge spécifié n'existe pas.\n");
+        return;
+    }
     struct Personne * pers_courante = head;
     revenir_debut_liste(head);
     while(pers_courante != NULL){
@@ -71,7 +129,7 @@ void supprimer_personne(struct Personne * head, int num_badge){
             /*TODO : gérer la chiée de cas limite*/
             if(pers_courante->precedente == NULL){
                 /*TODO : peut-être un bug ici, sinon tout semble bon*/
-                /*l'élément qu'on supprime est le premier de la liste*/
+                /*l'élément qu'on supprime est le premier de la liste (hors noeud originel)*/
                 pers_courante->suivante->precedente = pers_courante->precedente;
             } else if(pers_courante->suivante == NULL) {
                 /*l'élément qu'on supprime est le dernier de la liste*/
@@ -287,6 +345,8 @@ int main(int argc, char **argv)
     p2->num_badge = 1;
     ajouter_personne(head, p2);
     print_personnes(head);*/
+    printf("Date : ");
+    get_current_date();
 
     /*END*/
 
@@ -343,13 +403,14 @@ int main(int argc, char **argv)
         case 4:
             printf("Modifier le code secret d'une personne\n");
             int num_badge4 = intFromSTDIN("Entrez le numéro du badge dont le code secret doit être modifié : ");
-            /*fonction*/
+            int nouveau_code = intFromSTDIN("Entrez le nouveau code secret : ");
+            modifier_code_secret_personne(head, num_badge4, nouveau_code);
             break;
         case 5:
             printf("Simuler le contrôle d'accès via le clavier\n");
             int num_badge5 = intFromSTDIN("Entrez le numéro de votre badge : ");
             int code_secret5 = intFromSTDIN("Entrez votre code secret : ");
-            /*fonction*/
+            get_access(head, num_badge5, code_secret5);
             break;
         case 6:
             break;
