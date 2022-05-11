@@ -16,7 +16,7 @@ struct Personne{
     char prenom[BUFFER];
     int num_badge; /*4 num*/
     int code_secret;
-    char last_date_access[11];/*DD/MM/YYYY*/
+    char last_date_access[11];/*timestamp*/
     int last_hour_access;
 
     struct Personne* suivante;
@@ -45,22 +45,39 @@ struct Personne * get_personne(struct Personne * head, int num_badge){
     return NULL;
 }
 
-/*DD/MM/YYYY*/
-char* get_current_date(){
-    /*TODO : bug ici*/
-    char date[11];
-    struct tm now;
-    now.tm_mon=1;
-    now.tm_year=1;
-    now.tm_hour=1;
-    asctime(&now);
-    printf("month : %i\n", now.tm_mon);
-    return date;
+int get_current_hour(){
+    /*heure actuelle, code honteusement pompé depuis ce fil stackoverflow : https://stackoverflow.com/questions/701524/getting-the-current-hour-in-c-using-time-h*/
+    time_t now = time(NULL);
+    struct tm *tm_struct = localtime(&now);
+    return tm_struct->tm_hour;
 }
 
 /*affiche une seule personne*/
 void print_personne(struct Personne * p){
     printf("\tnom : %s\n\tprénom : %s\n\tnuméro badge : %i\n\tcode secret : %i\n\tdernier passage le : %s à %ih\n", p->nom, p->prenom, p->num_badge, p->code_secret, p->last_date_access, p->last_hour_access);
+}
+
+void get_current_date(char date[]){
+    time_t now = time(NULL);
+    struct tm *tm_struct = localtime(&now);
+    int day = tm_struct->tm_mday;
+    char day_str[3];
+    int month = tm_struct->tm_mon++;
+    char month_str[3];
+    int year = tm_struct->tm_year+1900;
+    char year_str[5];
+    sprintf(day_str, "%d", day);
+    strcat(date, day_str);
+
+    strcat(date, "/");
+
+    sprintf(month_str, "%d", month);
+    strcat(date, month_str);
+
+    strcat(date, "/");
+
+    sprintf(year_str, "%d", year);
+    strcat(date, year_str);
 }
 
 void get_access(struct Personne * head, int num_badge, int code_secret){
@@ -71,7 +88,7 @@ void get_access(struct Personne * head, int num_badge, int code_secret){
         printf("Accès autorisé.\n");
         print_personne(p);
         /*modification de la date et l'heure de la visite*/
-        memcpy(p->last_date_access, get_current_date(), strlen(get_current_date())+1);
+        get_current_date(p->last_date_access);
         p->last_hour_access = get_current_hour();
         return;
     } else {
@@ -169,13 +186,6 @@ void print_pers_prec(struct Personne * node){
     if(node->precedente != NULL){
         print_personne(node->precedente);
     }
-}
-
-int get_current_hour(){
-    /*heure actuelle, code honteusement pompé depuis ce fil stackoverflow : https://stackoverflow.com/questions/701524/getting-the-current-hour-in-c-using-time-h*/
-    time_t now = time(NULL);
-    struct tm *tm_struct = localtime(&now);
-    return tm_struct->tm_hour;
 }
 
 /*Retourne le nombre de personne de la liste*/
@@ -345,9 +355,8 @@ int main(int argc, char **argv)
     p2->num_badge = 1;
     ajouter_personne(head, p2);
     print_personnes(head);*/
-    printf("Date : ");
-    get_current_date();
-
+    char date[11];
+    get_current_date(date);
     /*END*/
 
     do{
@@ -381,7 +390,7 @@ int main(int argc, char **argv)
             }
             int code_secret = intFromSTDIN("Code secret : ");
             /*valeurs par défaut*/
-            char last_date_access[11] = "00/00/0000";
+            long int last_date_access = 0;
             int last_hour_access = 0;
             /*peut être faire un malloc ici */
             struct Personne * p = malloc(sizeof(Personne));
@@ -390,7 +399,7 @@ int main(int argc, char **argv)
             memcpy(p->prenom, prenom, strlen(prenom)+1);
             p->num_badge = num_badge;
             p->code_secret = code_secret;
-            memcpy(p->last_date_access, last_date_access, strlen(last_date_access)+1);
+            /*memcpy(p->last_date_access, get_current_date(), strlen(get_current_date())+1);*/
             p->last_hour_access = last_hour_access;
             p->suivante = NULL;
             ajouter_personne(head, p);
