@@ -16,7 +16,7 @@ struct Personne{
     char prenom[BUFFER];
     int num_badge; /*4 num*/
     int code_secret;
-    char last_date_access[11];/*timestamp*/
+    char last_date_access[10];/*DD/MM/YYYY*/
     int last_hour_access;
 
     struct Personne* suivante;
@@ -31,7 +31,7 @@ struct Personne{
 
 struct Personne * get_personne(struct Personne * head, int num_badge){
     if(num_badge == 0){
-        printf("Ce numéro de badge n'existe pas.\n");
+        printf("Ce numéro de badge est interdit.\n");
         return NULL;
     }
     struct Personne * personne = head;
@@ -41,7 +41,7 @@ struct Personne * get_personne(struct Personne * head, int num_badge){
         }
         personne = personne->suivante;
     }
-    printf("Ce numéro de badge n'existe pas.\n");
+    /*printf("Ce numéro de badge n'existe pas.\n");*/
     return NULL;
 }
 
@@ -66,30 +66,38 @@ void get_current_date(char date[]){
     char month_str[3];
     int year = tm_struct->tm_year+1900;
     char year_str[5];
+
+    char date2[10];
+    if(day < 10)
+        strcat(date2, "0");
     sprintf(day_str, "%d", day);
-    strcat(date, day_str);
+    strcat(date2, day_str);
 
-    strcat(date, "/");
+    strcat(date2, "/");
 
+    if(month < 10)
+        strcat(date2, "0");
     sprintf(month_str, "%d", month);
-    strcat(date, month_str);
+    strcat(date2, month_str);
 
-    strcat(date, "/");
+    strcat(date2, "/");
 
     sprintf(year_str, "%d", year);
-    strcat(date, year_str);
+    strcat(date2, year_str);
+    memcpy(date, date2, sizeof(date2));
 }
 
 void get_access(struct Personne * head, int num_badge, int code_secret){
     struct Personne * p = get_personne(head, num_badge);
     if(p == NULL){
+        printf("Accès refusé.\n");
         return;
-    } else if(p->code_secret == code_secret){
+    } else if(p->code_secret == code_secret && p->num_badge == num_badge){
         printf("Accès autorisé.\n");
-        print_personne(p);
         /*modification de la date et l'heure de la visite*/
         get_current_date(p->last_date_access);
         p->last_hour_access = get_current_hour();
+        print_personne(p);
         return;
     } else {
         /*code incorrect*/
@@ -143,9 +151,7 @@ void supprimer_personne(struct Personne * head, int num_badge){
         /*printf("boucle : %i\n", pers_courante->num_badge);*/
         if(pers_courante->num_badge == num_badge){
             /*delink & relink*/
-            /*TODO : gérer la chiée de cas limite*/
             if(pers_courante->precedente == NULL){
-                /*TODO : peut-être un bug ici, sinon tout semble bon*/
                 /*l'élément qu'on supprime est le premier de la liste (hors noeud originel)*/
                 pers_courante->suivante->precedente = pers_courante->precedente;
             } else if(pers_courante->suivante == NULL) {
@@ -337,6 +343,11 @@ int intFromSTDIN(char *to_display)
     return given;
 }
 
+/*Sauvegarde toutes les personnes dans un fichier*/
+void sauvegarder_personnes(struct Personne * p){
+    
+}
+
 int main(int argc, char **argv)
 {
     /*ajouter_personne(&p1, &p3);
@@ -355,8 +366,6 @@ int main(int argc, char **argv)
     p2->num_badge = 1;
     ajouter_personne(head, p2);
     print_personnes(head);*/
-    char date[11];
-    get_current_date(date);
     /*END*/
 
     do{
@@ -390,16 +399,19 @@ int main(int argc, char **argv)
             }
             int code_secret = intFromSTDIN("Code secret : ");
             /*valeurs par défaut*/
-            long int last_date_access = 0;
             int last_hour_access = 0;
             /*peut être faire un malloc ici */
             struct Personne * p = malloc(sizeof(Personne));
             p->precedente = NULL;
             memcpy(p->nom, nom, strlen(nom)+1);
             memcpy(p->prenom, prenom, strlen(prenom)+1);
+            if(num_badge == 0){
+                printf("Ce numéro de badge est interdit.\n");
+                break;
+            }
             p->num_badge = num_badge;
             p->code_secret = code_secret;
-            /*memcpy(p->last_date_access, get_current_date(), strlen(get_current_date())+1);*/
+            memcpy(p->last_date_access, "00/00/0000", strlen("00/00/0000")+1);
             p->last_hour_access = last_hour_access;
             p->suivante = NULL;
             ajouter_personne(head, p);
