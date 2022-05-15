@@ -1,0 +1,20 @@
+Nom
+Prénom
+[numéro badge, par exemple:]14
+[code secret, par exemple:]1234
+[dernière date d'accès DD/MM/YYYY, par exemple:]00/00/0000
+[dernière heure d'accès, par exemple:]12h
+
+Dunand
+Nathan
+1452
+145224
+15/02/2022
+22h
+
+Guennec
+Paul
+45454545
+11111
+14/06/2021
+1h

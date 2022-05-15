@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include <unistd.h>
 
 #define BUFFER 50
 
@@ -14,7 +15,7 @@ struct Personne{
 
     char nom[BUFFER];
     char prenom[BUFFER];
-    int num_badge; /*4 num*/
+    int num_badge;
     int code_secret;
     char last_date_access[10];/*DD/MM/YYYY*/
     int last_hour_access;
@@ -261,47 +262,6 @@ void ajouter_personne(struct Personne * head, struct Personne * p){
     printf("Personne ajoutée !\n");
 }
 
-char* stringFromSTDIN(char *to_display)
-{
-    printf("%s", to_display);
-    char *line = malloc(50), *linep = line;
-    size_t lenmax = 50, len = lenmax;
-    int c;
-
-    if (line == NULL)
-    {
-        /*error*/
-        return '\0';
-    }
-
-    for (;;)
-    {
-        c = fgetc(stdin);
-        if (c == EOF)
-            break;
-
-        if (--len == 0)
-        {
-            len = lenmax;
-            char *linen = realloc(linep, lenmax *= 2);
-
-            if (linen == NULL)
-            {
-                free(linep);
-                return 0;
-            }
-            line = linen + (line - linep);
-            linep = linen;
-        }
-
-        if ((*line++ = c) == '\n')
-            break;
-    }
-    *line = '\0';
-
-    return line;
-}
-
 int intFromSTDIN(char *to_display)
 {
     printf("%s", to_display);
@@ -327,7 +287,6 @@ int intFromSTDIN(char *to_display)
 
             if (linen == NULL)
             {
-                free(linep);
                 return 0;
             }
             line = linen + (line - linep);
@@ -340,12 +299,153 @@ int intFromSTDIN(char *to_display)
     *line = '\0';
 
     int given = atoi(linep);
+    free(linep);
     return given;
 }
 
-/*Sauvegarde toutes les personnes dans un fichier*/
+/*Sauvegarde toutes les personnes dans un fichier export.out, il le créer s'il n'existe pas.*/
 void sauvegarder_personnes(struct Personne * p){
+    if(p->suivante == NULL){
+        printf("Erreur, la liste est vide.\n");
+        return;
+    }
+    FILE *f;
+    f = fopen("output.txt", "w");
+    if(f == NULL){
+        printf("Erreur lors de l'ouverture du fichier.\n");
+        exit(1);
+    }
+    struct Personne * personne = p->suivante;
+    while(personne != NULL){
+        printf("Ecriture ...\n");
+        /*si c'est la dernière personne, on ne rajoute pas \n à la toute fin du fichier*/
+        if(personne->suivante == NULL){
+            fprintf(f, "%s\n%s\n%i\n%i\n%s\n%ih\n", personne->nom, personne->prenom, personne->num_badge, personne->code_secret, personne->last_date_access, personne->last_hour_access);
+        } else {
+            fprintf(f, "%s\n%s\n%i\n%i\n%s\n%ih\n\n", personne->nom, personne->prenom, personne->num_badge, personne->code_secret, personne->last_date_access, personne->last_hour_access);
+        }
+        personne = personne->suivante;
+    }
+    fclose(f);
+}
+
+/*teste si le fichier que l'on veut faire lire à notre programme contient des données valides
+le numéro de badge 0 est interdit
+le fichier doit respecter le formatage imposé
+la fonction retourne 1 si tout s'est bien passé.*/
+int is_input_file_valid(FILE * f){
+    char nom[BUFFER];
+    char prenom[BUFFER];
+    int num_badge = 0;
+    int code_secret = 0;
+    int last_hour_access = 0;
+    char last_date_access[11];
+    while(fscanf(f,"nom : %s\nprenom: %s\nnum badge : %i\ncode secret : %i\ndernière date d'accès : %s à %ih\n", nom, prenom, &num_badge, &code_secret, last_date_access, &last_hour_access) != EOF){
+        if(num_badge == 0){
+            printf("Erreur : le numéro de badge 0 est interdit. Arrêt.\n");
+            return 0;
+        }
+    }
+    return 1;
+}
+
+/*volée et modifiée depuis : https://stackoverflow.com/questions/47116974/remove-a-substring-from-a-string-in-c#:~:text=There%20is%20no%20predefined%20function,source%20and%20destination%20arrays%20overlap.*/
+void strremove(char *str, const char *sub) {
+    size_t len = strlen(sub);
+    if (len > 0) {
+        while ((str = strstr(str, sub)) != NULL) {
+            memmove(str, str + len, strlen(str + len) + 1);
+        }
+    }
+}
+
+/*Va lire le fichier output.txt s'il existe et remplit la structure head*/
+void lire_personnes(struct Personne * head){
+    char nom[BUFFER];
+    char prenom[BUFFER];
+    int int_num_badge = 0;
+    int int_code_secret = 0;
+    char int_last_hour_access = 0;
+    char string_num_badge[BUFFER];
+    char string_code_secret[BUFFER];
+    char string_last_hour_access[BUFFER];
+    char last_date_access[11];
+    int i = 0;
+    if(access("output.txt", F_OK) != 0){
+        printf("Erreur, le fichier output.txt n'existe pas.\n");
+        return;
+    }
+    FILE *f;
+    f = fopen("output.txt", "r");
+    if(f == NULL){
+        printf("Erreur lors de l'ouverture du fichier.\n");
+        return;
+    }
+    /*if(is_input_file_valid(f) != 1){
+        printf("Erreur : le fichier contient des données invalides.\nArrêt de la lecture du fichier, la liste n'a pas été initialisée.\n");
+        return;
+    }*/
     
+    char* is_eof = "";
+    char garbage[BUFFER] = "";
+    do{
+        /*debug printf("test_nom : %s\ntest_prenom: %s\ntest_num badge : %i\ntest_code secret : %i\ntest_dernière date d'accès : %s à test:%ih\n", nom, prenom, num_badge, code_secret, last_date_access, last_hour_access);*/
+        struct Personne * p = malloc(sizeof(Personne));
+        p->precedente = NULL;
+        fgets(nom, BUFFER, f);
+        strremove(nom, "\n");
+        /*printf("nom : %s\n", nom);*/
+        memcpy(p->nom, nom, strlen(nom)+1);
+
+        fgets(prenom, BUFFER, f);
+        strremove(prenom, "\n");
+        /*printf("prenom : %s\n", prenom);*/
+        memcpy(p->prenom, prenom, strlen(prenom)+1);
+
+        fgets(string_num_badge, BUFFER, f);
+        strremove(string_num_badge, "\n");
+        /*printf("Num badge:%s\n", string_num_badge);*/
+        int_num_badge = atoi(string_num_badge);
+        p->num_badge = int_num_badge;
+        /*printf("num badge à ajouter : %i\n", p->num_badge);*/
+        if(numero_badge_exist(head, p->num_badge) == 1){
+            printf("Ce numéro de badge existe déjà ! Ajout de cette personne impossible.\n");
+            free(p);
+            return;
+        }
+
+        fgets(string_code_secret, BUFFER, f);
+        strremove(string_code_secret, "\n");
+        int_code_secret = atoi(string_code_secret);
+        p->code_secret = int_code_secret;
+
+        /*printf("DEBUG1 %s \n", nom);*/
+        fgets(last_date_access, BUFFER, f);
+        strremove(last_date_access, "\n");
+        memcpy(p->last_date_access, last_date_access, strlen("00/00/0000")+1);
+
+        fgets(string_last_hour_access, BUFFER, f);
+        strremove(string_last_hour_access, "\n");
+        int_last_hour_access = atoi(string_last_hour_access);
+        p->last_hour_access = int_last_hour_access;
+        p->suivante = NULL;
+        ajouter_personne(head, p);
+        i++;
+        is_eof = fgets(garbage, BUFFER, f);
+    }while( is_eof!=NULL );
+    fclose(f);
+}
+
+/*désalloue tout ce qui a été alloué*/
+void free_all(struct Personne * head){
+    /*aller à la fin de la liste*/
+    struct Personne * pers_courante;
+    while(head != NULL){
+        pers_courante = head;
+        free(pers_courante);
+        head = head->suivante;
+    }
+    free(head);
 }
 
 int main(int argc, char **argv)
@@ -394,7 +494,7 @@ int main(int argc, char **argv)
             int num_badge = intFromSTDIN("Numéro du badge : ");
             /*on vérifie que le numéro du badge n'existe pas déjà*/
             if(numero_badge_exist(head, num_badge) == 1){
-                printf("Ce numéro de badge existe déjà !\n");
+                printf("Ce numéro de badge existe déjà ! Ajout de cette personne impossible.\n");
                 break;
             }
             int code_secret = intFromSTDIN("Code secret : ");
@@ -407,6 +507,7 @@ int main(int argc, char **argv)
             memcpy(p->prenom, prenom, strlen(prenom)+1);
             if(num_badge == 0){
                 printf("Ce numéro de badge est interdit.\n");
+                free(p);
                 break;
             }
             p->num_badge = num_badge;
@@ -434,8 +535,11 @@ int main(int argc, char **argv)
             get_access(head, num_badge5, code_secret5);
             break;
         case 6:
+            printf("IMPORTANT : le fichier output.txt doit suivre le format des données, comme spécifié dans output_example.txt, sinon c'est à vos risques et périls ...\n\n");
+            sauvegarder_personnes(head);
             break;
         case 7:
+            lire_personnes(head);
             break;    
         default:
             menu = 0;
@@ -444,5 +548,6 @@ int main(int argc, char **argv)
     }while(menu >= 1 && menu <= 7);
 
     /*TODO: penser au free ici*/
+    free_all(head);
     return 0;
 }
